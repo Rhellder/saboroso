@@ -5,8 +5,8 @@ var menus = require("./../inc/menus");
 var router = express.Router();
 
 router.use(function(req, res, next){
-
-    if (['/login'].indexOf(req.url) === -1 && !req.session.user) 
+   
+   if (['/login'].indexOf(req.url) === -1 && !req.session.user)
     {
         res.redirect("/admin/login");
 
@@ -56,9 +56,8 @@ router.post("/login", function(req, res, next){
 
     }else{
 
-        
+       
         users.login(req.body.email, req.body.password).then(user => {
-
             req.session.user = user;
             res.redirect("/admin");
 
@@ -67,8 +66,6 @@ router.post("/login", function(req, res, next){
             users.render(req, res, err.message || err);
             
         });
-
-        console.log(user);
     }
     
 });
@@ -107,7 +104,15 @@ router.get("/menus", function(req, res, next){
 
 router.post("/menus", function(req, res, next){
 
-    res.send(req.fields);
+   menus.save(req.fields, req.files).then(results => {
+
+        res.send(results);
+
+   }).catch(err => {
+       
+       res.send(err);
+
+   });
     
 });
 
